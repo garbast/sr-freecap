@@ -71,14 +71,14 @@ class EidHandler implements MiddlewareInterface
         if (empty($eID) || !isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['sr_freecap']['eIDSR_include'][$eID])) {
             $response = $response->withStatus(404, 'eIDSR not registered');
         } else {
-			$configuration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['sr_freecap']['eIDSR_include'][$eID];
+            $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['sr_freecap']['eIDSR_include'][$eID];
+            $response = new NullResponse();
 			// Simple check to make sure that it's not an absolute file (to use the fallback)
 			if (strpos($configuration, '::') !== false || is_callable($configuration)) {
 				$frontendUser = $request->getAttribute('frontend.user');
 				$request = $request->withAttribute('target', $configuration);
-            	$response = $this->dispatcher->dispatch($request) ?? new NullResponse();
+            	$response = $this->dispatcher->dispatch($request);
             }
-            $response = new NullResponse();
         }
         return $response;
     }
