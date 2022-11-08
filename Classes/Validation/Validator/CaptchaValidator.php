@@ -87,7 +87,7 @@ class CaptchaValidator extends AbstractValidator
 			$this->addError(
 				$this->translateErrorMessage(
 					'9221561048',
-					'sr_freecap'
+					'SrFreecap'
 				),
 				9221561048
 			);

@@ -51,7 +51,7 @@ class TtfFileValidator extends AbstractValidator
 			$this->addError(
 				$this->translateErrorMessage(
 					'9221561046',
-					'sr_freecap'
+					'SrFreecap'
 				),
 				9221561046
 			);
@@ -64,7 +64,7 @@ class TtfFileValidator extends AbstractValidator
 				$this->addError(
 					$this->translateErrorMessage(
 						'9221561047',
-						'sr_freecap'
+						'SrFreecap'
 					),
 					9221561046
 				);
