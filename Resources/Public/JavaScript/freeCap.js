@@ -1,7 +1,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2020 Stanislas Rolland <typo32020(arobas)sjbr.ca>
+*  (c) 2007-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -42,8 +42,8 @@
 			if (document.getElementById) {
 					// extract image name from image source (i.e. cut off ?randomness)
 				var theImage = document.getElementById('tx_srfreecap_captcha_image_' + id);
-				var parts = theImage.src.split('&set');
-				theImage.src = parts[0] + '&set=' + Math.round(Math.random()*100000);
+				var parts = theImage.src.split('&freecapSet');
+				theImage.src = parts[0] + '&freecapSet=' + Math.round(Math.random()*100000);
 			} else {
 				alert(noImageMessage ? noImageMessage : 'Sorry, we cannot autoreload a new image. Submit the form and a new image will be loaded.');
 			}
@@ -60,7 +60,7 @@
 		playCaptcha: function (id, wavUrl, noPlayMessage) {
 			if (document.getElementById) {
 				var theAudio = document.getElementById('tx_srfreecap_captcha_playAudio_' + id);
-				var url = wavUrl + '&set=' + Math.round(Math.random()*100000);
+				var url = wavUrl + '&freecapSet=' + Math.round(Math.random()*100000);
 				while (theAudio.firstChild) {
 					theAudio.removeChild(theAudio.firstChild);
 				}

@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\ViewHelpers;
 /*
  *  Copyright notice
  *
- *  (c) 2013-2021 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2013-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -30,6 +30,7 @@ use SJBR\SrFreecap\ViewHelpers\TranslateViewHelper;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Session\Backend\Exception\SessionNotFoundException;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
@@ -124,12 +125,12 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 		$translator = GeneralUtility::makeInstance(TranslateViewHelper::class);
 
 		// Generate the image url
+		$pageUid = $this->getTypoScriptFrontendController()->id;
+		$site = GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($pageUid);
 		$fakeId = substr(md5(uniqid(rand())), 0, 5);
-		$siteURL = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 		$languageAspect = $this->context->getAspect('language');
 		$urlParams = [
 			'eIDSR' => 'sr_freecap_EidDispatcher',
-			'id' => $this->getTypoScriptFrontendController()->id,
 			'pluginName' => 'ImageGenerator',
 			'actionName' => 'show',
 			'formatName' => 'png',
@@ -138,8 +139,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 		if ($this->getTypoScriptFrontendController()->MP) {
 			$urlParams['MP'] = $this->getTypoScriptFrontendController()->MP;
 		}
-		$urlParams['set'] = $fakeId;
-		$imageUrl = $siteURL . 'index.php?' . ltrim(GeneralUtility::implodeArrayForUrl('', $urlParams), '&');
+		$imageUrl = (string)$site->getRouter($this->context)->generateUri((string)$pageUid, $urlParams) . '&freecapSet=' . $fakeId;
 
 		// Generate the html text
 		$value = '<img' . $this->getClassAttribute('image', $suffix) . ' id="tx_srfreecap_captcha_image_' . $fakeId . '"'

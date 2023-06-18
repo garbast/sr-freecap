@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Utility;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2020 Stanislas Rolland <typo32020(arobas)sjbr.ca>
+ *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is

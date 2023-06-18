@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\ViewHelpers;
 /*
  *  Copyright notice
  *
- *  (c) 2013-2022 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2013-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,6 +29,7 @@ namespace SJBR\SrFreecap\ViewHelpers;
 use SJBR\SrFreecap\ViewHelpers\TranslateViewHelper;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Session\Backend\Exception\SessionNotFoundException;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -99,12 +100,13 @@ class AudioViewHelper extends AbstractTagBasedViewHelper
 		$translator = GeneralUtility::makeInstance(TranslateViewHelper::class);
 		// Generate the icon
 		if (($settings['accessibleOutput'] ?? false) && ($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem'] ?? false)) {
+			$pageUid = $this->getTypoScriptFrontendController()->id;
+			$site = GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($pageUid);
 			$languageAspect = $this->context->getAspect('language');
 			$fakeId = substr(md5(uniqid(rand())), 0, 5);
-			$siteURL = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+			$siteURL = $site->getBase();
 			$urlParams = [
 				'eIDSR' => 'sr_freecap_EidDispatcher',
-				'id' => $GLOBALS['TSFE']->id,
 				'pluginName' => 'AudioPlayer',
 				'actionName' => 'play',
 				'formatName' => 'wav',
@@ -113,7 +115,8 @@ class AudioViewHelper extends AbstractTagBasedViewHelper
 			if ($this->getTypoScriptFrontendController()->MP) {
 				$urlParams['MP'] = $this->getTypoScriptFrontendController()->MP;
 			}
-			$audioURL = $siteURL . 'index.php?' . ltrim(GeneralUtility::implodeArrayForUrl('', $urlParams), '&');
+			$audioURL = (string)$site->getRouter($this->context)->generateUri((string)$pageUid, $urlParams);
+
 			if (isset($settings['accessibleOutputImage']) && $settings['accessibleOutputImage']) {
 				$value = '<input type="image" alt="' . $translator->render('click_here_accessible') . '"'
 					. ' title="' . $translator->render('click_here_accessible') . '"'

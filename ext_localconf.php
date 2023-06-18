@@ -7,6 +7,12 @@ call_user_func(
 		// Dispatching requests to image generator and audio player
 		$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['sr_freecap']['eIDSR_include']['sr_freecap_EidDispatcher'] = \SJBR\SrFreecap\Http\EidDispatcher::class . '::initAndDispatch';
 		
+		if (isset($GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'])) {
+		    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'freecapSet';
+		} else {
+			$GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'] = ['freecapSet'];
+		}
+		
 		$extensionName = \TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($extKey);
 		// Configuring the captcha image generator
 		\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(

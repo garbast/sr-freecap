@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Utility;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2022 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -28,7 +28,6 @@ namespace SJBR\SrFreecap\Utility;
 /************************************************************\
 *
 *		freeCap v1.4.1 Copyright 2005 Howard Yeend
-*		www.puremango.co.uk
 *
 *    This file is part of freeCap.
 *

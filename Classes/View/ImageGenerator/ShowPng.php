@@ -32,7 +32,6 @@ namespace SJBR\SrFreecap\View\ImageGenerator;
 /*
  *
  *		freeCap v1.4.1 Copyright 2005 Howard Yeend
- *		www.puremango.co.uk
  *
  *    This file is part of freeCap.
  *
