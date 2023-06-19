@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Utility;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2022 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,6 +27,7 @@ namespace SJBR\SrFreecap\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -54,7 +55,7 @@ class FontMakingUtility
 		$charactersArray = explode(',', $characters);
 		$charactersCount = count($charactersArray);
 		
-		$gifObjArray = array();
+		$gifObjArray = [];
 		$gifObjArray['backColor'] = $bgColor;
 		$gifObjArray['transparentBackground'] = 0;
 		$gifObjArray['reduceColors'] = '';
@@ -69,6 +70,8 @@ class FontMakingUtility
 			$vOffset = intval(($width - ($bbox[7] - $bbox[1]))/2);
 			
 			$gifObjArray[$ic . '0.']['niceText'] = 0;
+			$gifObjArray[$ic . '0.']['angle'] = 0;
+			$gifObjArray[$ic . '0.']['splitRendering.'] = [];
 			$gifObjArray[$ic . '0.']['antiAlias'] = 1;
 			$gifObjArray[$ic . '0.']['align'] = $align;
 			$gifObjArray[$ic . '0.']['fontSize'] = $size;
@@ -80,7 +83,7 @@ class FontMakingUtility
 		$gifCreator = GeneralUtility::makeInstance(GifBuilderUtility::class);
 		if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['gdlib'] ?? false) {
 			$gifCreator->start($gifObjArray, []);
-			return $gifCreator->gifBuild();
+			return Environment::getPublicPath() . '/' . $gifCreator->gifBuild();
 		} else {
 			return false;
 		}
@@ -89,7 +92,6 @@ class FontMakingUtility
 	/************************************************************\
 	*
 	*		GD Fontmaker Copyright 2005 Howard Yeend
-	*		www.puremango.co.uk
 	*
 	*    This file is part of GD Fontmaker.
 	*
@@ -137,7 +139,6 @@ class FontMakingUtility
 						// it's not black; background
 						$fontdata .= chr(0);
 					}
-					$i++;
 				}
 			}
 		}

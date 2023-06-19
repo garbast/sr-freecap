@@ -29,6 +29,7 @@ namespace SJBR\SrFreecap\Controller;
 
 use SJBR\SrFreecap\Domain\Model\Font;
 use SJBR\SrFreecap\Domain\Repository\FontRepository;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -70,5 +71,11 @@ class FontMakerController  extends ActionController
 		$fontRepository = GeneralUtility::makeInstance(FontRepository::class);
 		$fontRepository->writeFontFile($font);
 		$this->view->assign('font', $font);
+        $imageUrl = $font->getPngImageFileName();
+        $imageUrl = str_replace(Environment::getPublicPath() . '/', $this->request->getAttribute('normalizedParams')->getSiteUrl(), $imageUrl);
+        $fontFilename = $font->getGdFontFileName();
+        $fontFilename = str_replace(Environment::getPublicPath(), '', $fontFilename);
+        $this->view->assign('imageUrl', $imageUrl);
+        $this->view->assign('fontFilename', $fontFilename);
 	}
 }
