@@ -75,7 +75,7 @@ class FontMakingUtility
 			$gifObjArray[$ic . '0.']['antiAlias'] = 1;
 			$gifObjArray[$ic . '0.']['align'] = $align;
 			$gifObjArray[$ic . '0.']['fontSize'] = $size;
-			$gifObjArray[$ic . '0.']['fontFile'] = '../' . $font;
+			$gifObjArray[$ic . '0.']['fontFile'] = str_replace(Environment::getPublicPath() . '/', '', GeneralUtility::getFileAbsFileName($font));
 			$gifObjArray[$ic . '0.']['fontColor'] = $color;
 			$gifObjArray[$ic . '0.']['maxWidth'] = $width;
 			$gifObjArray[$ic . '0.']['offset'] = (($ic-1) * $width + $hOffset) . ',' . $vertOffset;
@@ -83,7 +83,7 @@ class FontMakingUtility
 		$gifCreator = GeneralUtility::makeInstance(GifBuilderUtility::class);
 		if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['gdlib'] ?? false) {
 			$gifCreator->start($gifObjArray, []);
-			return Environment::getPublicPath() . '/' . $gifCreator->gifBuild();
+			return $gifCreator->gifBuild();
 		} else {
 			return false;
 		}

@@ -72,7 +72,7 @@ class FontMakerController  extends ActionController
 		$fontRepository->writeFontFile($font);
 		$this->view->assign('font', $font);
         $imageUrl = $font->getPngImageFileName();
-        $imageUrl = str_replace(Environment::getPublicPath() . '/', $this->request->getAttribute('normalizedParams')->getSiteUrl(), $imageUrl);
+        $imageUrl = $this->request->getAttribute('normalizedParams')->getSiteUrl() . $imageUrl;
         $fontFilename = $font->getGdFontFileName();
         $fontFilename = str_replace(Environment::getPublicPath(), '', $fontFilename);
         $this->view->assign('imageUrl', $imageUrl);
