@@ -1,21 +1,28 @@
 <?php
 defined('TYPO3') or die();
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
 call_user_func(
     function($extKey)
-    {
-		// Dispatching requests to image generator and audio player
-		$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['sr_freecap']['eIDSR_include']['sr_freecap_EidDispatcher'] = \SJBR\SrFreecap\Http\EidDispatcher::class . '::initAndDispatch';
-		
+    {	
 		if (isset($GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'])) {
 		    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'freecapSet';
 		} else {
 			$GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'] = ['freecapSet'];
 		}
+
+		// GDlib is a requirement for the Font Maker module
+		if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['gdlib'] ?? false) {
+			// Add module configuration setup
+			ExtensionManagementUtility::addTypoScript($extKey, 'setup', '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:' . $extKey . '/Configuration/TypoScript/FontMaker/setup.typoscript">');
+		}
 		
-		$extensionName = \TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($extKey);
+		$extensionName = GeneralUtility::underscoredToUpperCamelCase($extKey);
 		// Configuring the captcha image generator
-		\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+		ExtensionUtility::configurePlugin(
 			// The extension name (in UpperCamelCase) or the extension key (in lower_underscore)
 			$extensionName,
 			// A unique name of the plugin in UpperCamelCase
@@ -32,7 +39,7 @@ call_user_func(
 		);
 
 		// Configuring the audio captcha player
-		\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+		ExtensionUtility::configurePlugin(
 			// The extension name (in UpperCamelCase) or the extension key (in lower_underscore)
 			$extensionName,
 			// A unique name of the plugin in UpperCamelCase

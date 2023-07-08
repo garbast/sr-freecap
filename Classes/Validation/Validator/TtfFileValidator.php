@@ -34,14 +34,11 @@ use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 class TtfFileValidator extends AbstractValidator
 {
 	/**
-	 * Returns true, if the given property ($propertyValue) is a valid number in the given range.
-	 *
-	 * If at least one error occurred, the result is false.
+	 * Check if the given property ($propertyValue) is a valid number in the given range.
 	 *
 	 * @param mixed $value The value that should be validated
-	 * @return boolean true if the value is within the range, otherwise false
 	 */
-	protected function isValid($value)
+	protected function isValid($value): void
 	{
 		$isValid = true;
 		$absoluteFileName = GeneralUtility::getFileAbsFileName($value);
@@ -71,6 +68,5 @@ class TtfFileValidator extends AbstractValidator
 				$isValid = false;
 			}
 		}
-		return $isValid;
 	}
 }

@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\ViewHelpers;
 /*
  *  Copyright notice
  *
- *  (c) 2013-2022 Stanislas Rolland <typo3AAAA@sjbr.ca>
+ *  (c) 2013-2023 Stanislas Rolland <typo3AAAA@sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -124,20 +124,20 @@ class TranslateViewHelper extends AbstractViewHelper
 		if ($this->hasArgument('key')) {
 			$key = $this->arguments['key'];
 		}
-		$value = null;
+		$value = '';
 		$default = $this->hasArgument('default') ? $this->arguments['default'] : '';
 		$htmlEscape = $this->hasArgument('htmlEscape') ? $this->arguments['htmlEscape'] : false;
-		$arguments = $this->hasArgument('arguments') ? $this->arguments['arguments'] : [];
+		$arguments = $this->hasArgument('arguments') ? $this->arguments['arguments'] : null;
 		// If the suffix is allowed and we have a localized string for the desired salutation, we'll take that.
 		$settings = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS, $this->extensionName, $this->pluginName);
 		if (isset($settings['salutation']) && in_array($settings['salutation'], $this->allowedSuffixes, 1)) {
 			$expandedKey = $key . '_' . $settings['salutation'];
 			$value = LocalizationUtility::translate($expandedKey, $this->extensionName, $arguments);
 		}
-		if ($value === null) {
+		if (!$value) {
 			$value = LocalizationUtility::translate($key, $this->extensionName, $arguments);
 		}
-		if ($value === null) {
+		if (!$value) {
 			$value = $default !== null ? $default : $this->renderChildren();
 		} elseif ($htmlEscape) {
 			$value = htmlspecialchars($value);

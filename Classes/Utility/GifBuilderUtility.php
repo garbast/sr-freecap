@@ -61,6 +61,6 @@ class GifBuilderUtility extends GifBuilder
 	 */
 	public function ImageWrite($destImg, $theImage, $quality = 0)
 	{
-		return parent::ImageWrite($destImg, Environment::getPublicPath() . '/' . $theImage, $quality);
+		return parent::ImageWrite($destImg, $theImage, $quality);
  	}
 }

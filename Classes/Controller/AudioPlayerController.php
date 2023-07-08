@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Controller;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2021 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,9 +27,11 @@ namespace SJBR\SrFreecap\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use Psr\Http\Message\ResponseInterface;
 use SJBR\SrFreecap\Domain\Repository\WordRepository;
 use SJBR\SrFreecap\View\AudioPlayer\PlayMp3;
 use SJBR\SrFreecap\View\AudioPlayer\PlayWav;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -61,12 +63,12 @@ class AudioPlayerController extends ActionController
 	/**
 	 * Play the audio catcha
 	 *
-	 * @return string Audio content to be sent to the client
+	 * @return ResponseInterface
 	 */
-	public function playAction()
+	public function playAction(): ResponseInterface
 	{
 		$word = $this->wordRepository->getWord();
-		$format = $this->request->getFormat();
+		$format = $this->request->getQueryParams()['formatName'];
 		if ($format === 'mp3') {
 			$this->view = GeneralUtility::makeInstance(PlayMp3::class);
 		} else if ($format === 'wav') {
@@ -76,5 +78,7 @@ class AudioPlayerController extends ActionController
 		}
 		$this->view->assign('word', $word);
 		$this->view->render();
+		$response = new Response();
+		return $response->withStatus(200, 'Audio sent');
 	}
 }

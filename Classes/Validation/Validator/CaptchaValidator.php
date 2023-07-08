@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Validation\Validator;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2021 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -51,12 +51,12 @@ class CaptchaValidator extends AbstractValidator
 
 	/**
 	 * Check the word that was entered against the hashed value
-	 * Returns true, if the given property ($word) matches the session captcha value.
+	 * that is wether the given property ($word) matches the session captcha value.
+	 * The method isValid() does not return a value. In case of an error it adds an error to the validation result by calling method addError(). 
 	 *
 	 * @param string $word: the word that was entered and should be validated
-	 * @return boolean true, if the word entered matches the hash value, false if an error occured
 	 */
-	public function isValid($word)
+	public function isValid($word): void
 	{
 		$isValid = false;
 		// This validator needs a frontend user session
@@ -92,6 +92,5 @@ class CaptchaValidator extends AbstractValidator
 				9221561048
 			);
 		}
-		return $isValid;
 	}
 }

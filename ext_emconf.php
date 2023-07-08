@@ -7,7 +7,7 @@ $EM_CONF[$_EXTKEY] = [
 	'title' => 'freeCap CAPTCHA',
 	'description' => 'A TYPO3 integration of freeCap CAPTCHA.',
 	'category' => 'fe',
-	'version' => '11.5.5',
+	'version' => '12.4.0',
 	'state' => 'stable',
 	'clearcacheonload' => 0,
 	'author' => 'Stanislas Rolland',
@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = [
 	'author_company' => 'SJBR',
 	'constraints' => [
 		'depends' => [
-			'typo3' => '11.5.0-11.5.99'
+			'typo3' => '12.4.0-12.4.99'
 		],
 		'conflicts' => [],
 		'suggests' => []

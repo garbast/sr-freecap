@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Configuration;
 /*
  *  Copyright notice
  *
- *  (c) 2013-2020 Stanislas Rolland <typo32020(arobas)sjbr.ca>
+ *  (c) 2013-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,8 +27,6 @@ namespace SJBR\SrFreecap\Configuration;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
-
 /**
  * Class providing configuration help for extension SrFreecap
  */
@@ -38,15 +36,14 @@ class ConfigurationHelper
 	 * Renders a select element that allows to choose the encryption algoritm to be used by the extension
 	 *
 	 * @param array $params: Field information to be rendered
-	 * @param AbstractTagBasedViewHelper $pObj: The calling parent object.
 	 * @return string The HTML select field
 	 */
-	public function buildEncryptionAlgorithmSelector(array $params, AbstractTagBasedViewHelper $pObj)
+	public function buildEncryptionAlgorithmSelector(array $params)
 	{
 		if (in_array('openssl', get_loaded_extensions())) {
 			$encryptionAlgorithms = openssl_get_cipher_methods(true);
 			if (!empty($encryptionAlgorithms)) {
-				$field = '<br /><select id="' . $params['propertyName'] . '" name="' . $params['fieldName'] . '" >' . LF;
+				$field = '<br /><select id="sr-freecap-' . $params['fieldName'] . '" name="' . $params['fieldName'] . '" >' . LF;
 				foreach ($encryptionAlgorithms as $encryptionAlgorithm) {
 					$selected = $params['fieldValue'] == $encryptionAlgorithm ? 'selected="selected"' : '';
 					$field .= '<option name="' . $encryptionAlgorithm . '" value="' . $encryptionAlgorithm . '" ' . $selected . '>' . $encryptionAlgorithm . '</option>' . LF;

@@ -106,7 +106,7 @@ class AudioViewHelper extends AbstractTagBasedViewHelper
 			$fakeId = substr(md5(uniqid(rand())), 0, 5);
 			$siteURL = $site->getBase();
 			$urlParams = [
-				'eIDSR' => 'sr_freecap_EidDispatcher',
+				'srFreecap' => '1',
 				'pluginName' => 'AudioPlayer',
 				'actionName' => 'play',
 				'formatName' => 'wav',

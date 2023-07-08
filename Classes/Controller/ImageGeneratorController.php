@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Controller;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2022 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,9 +27,11 @@ namespace SJBR\SrFreecap\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use Psr\Http\Message\ResponseInterface;
 use SJBR\SrFreecap\Domain\Repository\WordRepository;
 use SJBR\SrFreecap\View\ImageGenerator\ShowPng;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -67,8 +69,10 @@ class ImageGeneratorController extends ActionController
 
 	/**
 	 * Show the CAPTCHA image
+	 *
+	 * @return ResponseInterface
 	 */
-	public function showAction()
+	public function showAction(): ResponseInterface
 	{
 		// Get session data
 		$word = $this->wordRepository->getWord();
@@ -84,6 +88,8 @@ class ImageGeneratorController extends ActionController
 		$this->view->render();
 		// Store the session data
 		$this->wordRepository->setWord($word);
+		$response = new Response();
+		return $response->withStatus(200, 'Image sent');
 	}
 
 	/**

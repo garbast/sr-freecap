@@ -130,7 +130,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 		$fakeId = substr(md5(uniqid(rand())), 0, 5);
 		$languageAspect = $this->context->getAspect('language');
 		$urlParams = [
-			'eIDSR' => 'sr_freecap_EidDispatcher',
+			'srFreecap' => '1',
 			'pluginName' => 'ImageGenerator',
 			'actionName' => 'show',
 			'formatName' => 'png',

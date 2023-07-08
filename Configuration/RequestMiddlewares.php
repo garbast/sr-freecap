@@ -11,13 +11,14 @@
  */
 return [
     'frontend' => [
-        'sjbr/sr-freecap/eidsr' => [
-            'target' => \SJBR\SrFreecap\Middleware\EidHandler::class,
+        'sjbr/sr-freecap/captcha-request-handler' => [
+            'target' => \SJBR\SrFreecap\Middleware\CaptchaRequestHandler::class,
             'after' => [
                 'typo3/cms-frontend/tsfe',
                 'typo3/cms-frontend/authentication',
                 'typo3/cms-frontend/backend-user-authentication',
                 'typo3/cms-frontend/site',
+                'typo3/cms-frontend/prepare-tsfe-rendering'
             ]
         ]
     ]
