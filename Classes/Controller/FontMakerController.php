@@ -108,4 +108,17 @@ class FontMakerController  extends ActionController
         $this->moduleTemplate->assign('fontFilename', $fontFilename);
         return $this->moduleTemplate->renderResponse('Create');
 	}
+
+	/**
+	 * A template method for displaying custom error flash messages, or to
+	 * display no flash message at all on errors. Override this to customize
+	 * the flash message in your action controller.
+	 *
+	 * @return string|boolean The flash message or FALSE if no flash message should be set
+	 * @api
+	 */
+	protected function getErrorFlashMessage()
+	{
+		return LocalizationUtility::translate('LLL:EXT:sr_freecap/Resources/Private/Language/locallang.xlf:font_not_created');
+	}
 }

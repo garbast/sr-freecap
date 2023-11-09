@@ -63,7 +63,7 @@ class TtfFileValidator extends AbstractValidator
 						'9221561047',
 						'SrFreecap'
 					),
-					9221561046
+					9221561047
 				);
 				$isValid = false;
 			}

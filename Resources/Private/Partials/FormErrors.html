@@ -3,7 +3,7 @@
 	<f:if condition="{validationResults.flattenedErrors}">
 			<ul class="errors">
 				<f:for each="{validationResults.errors}" as="error">
-					<li><freeCap:translate key="{error.code}">{error.code}</freeCap:translate></li>
+					<li><freeCap:translate key="{error.code}" htmlEscape="0">{error.code}</freeCap:translate></li>
 				</f:for>
 			</ul>
 	</f:if>

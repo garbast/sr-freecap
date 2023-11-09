@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Domain\Model;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2022 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -30,7 +30,7 @@ namespace SJBR\SrFreecap\Domain\Model;
 use SJBR\SrFreecap\Utility\FontMakingUtility;
 use SJBR\SrFreecap\Validation\Validator\TtfFileValidator;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Extbase\Annotation\Validate;
+use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
@@ -48,14 +48,14 @@ class Font extends AbstractEntity
 
 	/**
 	 * @var int
-	 * @Validate("NumberRange", options={"minimum": 5, "maximum": 255})
 	 */
+    #[Extbase\Validate(['validator' => 'NumberRange', 'options' => ['minimum' => 5, 'maximum' => 255]])]
 	protected $characterWidth;
 
 	/**
 	 * @var int
-	 * @Validate("NumberRange", options={"minimum": 5, "maximum": 255})
 	 */
+    #[Extbase\Validate(['validator' => 'NumberRange', 'options' => ['minimum' => 5, 'maximum' => 255]])]
 	protected $characterHeight;
 
 	/**
@@ -65,11 +65,11 @@ class Font extends AbstractEntity
 
 	/**
 	 * @var string
-	 * @Validate("NotEmpty")
-	 * @Validate("StringLength", options={"minimum": 1, "maximum": 255})
-	 * @Validate("\SJBR\SrFreecap\Validation\Validator\TtfFileValidator")
 	 **/
-	protected $ttfFontFileName = '';
+	#[Extbase\Validate(['validator' => 'NotEmpty'])]
+    #[Extbase\Validate(['validator' => 'StringLength', 'options' => ['minimum' => 1, 'maximum' => 255]])]
+    #[Extbase\Validate(['validator' => '\SJBR\SrFreecap\Validation\Validator\TtfFileValidator'])]
+	protected $ttfFontFileName;
 
 	/**
 	 * @var string

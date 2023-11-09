@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
+<?xml version="1.0" encoding="utf-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 	<file source-language="en" target-language="fr" datatype="plaintext" original="messages" date="2012-11-06T22:12:01Z" product-name="sr_freecap">
 		<header/>
 		<body>
@@ -177,7 +177,7 @@
 			</trans-unit>
 			<trans-unit id="9221561046" xml:space="preserve">
 				<source>A file with the given name could not be found.</source>
-				<target>Aucun fichier portant ce nom n'a été trouvé.</target>
+				<target>Aucun fichier portant ce nom n&apos;a été trouvé.</target>
 			</trans-unit>
 			<trans-unit id="9221561047" xml:space="preserve">
 				<source>The specified file is not a True Type Font file.</source>
@@ -189,7 +189,7 @@
 			</trans-unit>
 			<trans-unit id="9221561048_informal" xml:space="preserve">
 				<source>Please enter the word or number as it appears in the image. The entered value was incorrect.</source>
-				<target>Entre le mot ou le nombre tel qu'il apparaît dans l'image. La valeur entrée était incorrecte.</target>
+				<target>Entre le mot ou le nombre tel qu&apos;il apparaît dans l'image. La valeur entrée était incorrecte.</target>
 			</trans-unit>
 			<trans-unit id="1221560718" xml:space="preserve">
 				<source>Please enter the path to the source TTF font file relative to TYPO3 site.</source>
@@ -198,6 +198,10 @@
 			<trans-unit id="1221560718_informal" xml:space="preserve">
 				<source>Please enter the path to the source TTF font file relative to TYPO3 site.</source>
 				<target>Entre le chemin jusqu'au fichier de police TTF relativement au site TYPO3.</target>
+			</trans-unit>
+			<trans-unit id="font_not_created" xml:space="preserve">
+				<source>The GD font could not be created.</source>
+				<target>La police GD n'a pas pu être créée.</target>
 			</trans-unit>
 		</body>
 	</file>
