@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap;
 /*
  *  Copyright notice
  *
- *  (c) 2005-2021 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2005-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -59,7 +59,6 @@ class PiBaseApi
 
 		// Get the captcha image view helper
 		$imageViewHelper = GeneralUtility::makeInstance(ImageViewHelper::class);
-		$imageViewHelper->injectConfigurationManager($configurationManager);
 		$markerArray['###'. strtoupper($this->extKey) . '_IMAGE###'] = $imageViewHelper->render('pi1');
 		$markerArray['###'. strtoupper($this->extKey) . '_CANT_READ###'] = '';
 

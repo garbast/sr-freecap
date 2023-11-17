@@ -26,15 +26,16 @@ namespace SJBR\SrFreecap\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use Psr\Http\Message\ServerRequestInterface;
 use SJBR\SrFreecap\ViewHelpers\TranslateViewHelper;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Domain\ConsumableString;
+use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Session\Backend\Exception\SessionNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
@@ -54,32 +55,6 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 	 * @var string Name of the plugin this view helper belongs to
 	 */
 	protected $pluginName = 'tx_srfreecap';
-
-	/**
-	 * @var ConfigurationManagerInterface
-	 */
-	protected $configurationManager;
-
-	/**
-	 * @param ConfigurationManagerInterface $configurationManager
-	 */
-	public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager)
-	{
-		$this->configurationManager = $configurationManager;
-	}
-
-	/**
-	 * @var PageRenderer
-	 */
-	protected $pageRenderer;
-
-	/**
-	 * @param PageRenderer $pageRenderer
-	 */
-	public function injectPageRenderer(PageRenderer $pageRenderer)
-	{
-		$this->pageRenderer = $pageRenderer;
-	}
 
 	/**
 	 * @var Context
@@ -103,20 +78,24 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 	/**
 	 * Render the captcha image html
 	 *
-	 * @param string suffix to be appended to the extenstion key when forming css class names
+	 * @param string $suffix
 	 * @return string The html used to render the captcha image
 	 */
-	public function render($suffix = '')
+    public function render($suffix = ''): string
 	{
 		// This viewhelper needs a frontend user session
 		if (!is_object($this->getTypoScriptFrontendController()) || !isset($this->getTypoScriptFrontendController()->fe_user)) {
 			throw new SessionNotFoundException('No frontend user found in session!');
 		}
-
 		$value = '';
 
 		// Include the required JavaScript
-		$this->pageRenderer->addJsFooterFile(PathUtility::stripPathSitePrefix(ExtensionManagementUtility::extPath($this->extensionKey)) . 'Resources/Public/JavaScript/freeCap.js');
+		$assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
+		$nonceAttribute = $this->getRequest()->getAttribute('nonce');
+		if ($nonceAttribute instanceof ConsumableString) {
+			$nonce = $nonceAttribute->consume();
+		}
+		$assetCollector->addJavaScript('sr-freecap', 'EXT:sr_freecap/Resources/Public/JavaScript/freeCap.js', ['nonce' => $nonce]);
 
 		// Disable caching
 		$this->getTypoScriptFrontendController()->no_cache = true;
@@ -146,9 +125,17 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 			. ' src="' . htmlspecialchars($imageUrl) . '"'
 			. ' alt="' . $translator->render('altText') . ' "/>'
 			. '<span' . $this->getClassAttribute('cant-read', $suffix) . '>' . $translator->render('cant_read1')
-			. ' <a href="#" onclick="this.blur();' . $this->extensionName . '.newImage(\'' . $fakeId . '\', \'' . $translator->render('noImageMessage').'\');return false;">'
+			. ' <a id="tx_srfreecap_captcha_image_' . $fakeId . '_link" >'
 			. $translator->render('click_here') . '</a>'
 			. $translator->render('cant_read2') . '</span>';
+		$imageOnClickScript = $this->extensionName . 'ImageLinkOnClickFunction = function(event) {
+	            event.preventDefault();
+	            document.getElementById("tx_srfreecap_captcha_image_' . $fakeId . '_link").blur();' . 
+	            $this->extensionName . '.newImage(\'' . $fakeId . '\', \'' . $translator->render('noImageMessage') .'\');
+	            return false;
+	        };
+			document.getElementById("tx_srfreecap_captcha_image_' . $fakeId . '_link").addEventListener("click", ' . $this->extensionName . 'ImageLinkOnClickFunction, false);';
+	    $value .= '<script nonce="' . $nonce . '" >' . $imageOnClickScript .'</script>';
 		return $value;
 	}
 
@@ -167,8 +154,13 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
     /**
      * @return TypoScriptFrontendController
      */
-    protected function getTypoScriptFrontendController()
+    private function getTypoScriptFrontendController()
     {
-        return $GLOBALS['TSFE'];
+    	return $this->getRequest()->getAttribute('frontend.controller');
     }
+
+	private function getRequest(): ServerRequestInterface
+	{
+		return $GLOBALS['TYPO3_REQUEST'];
+	}
 }
