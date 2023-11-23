@@ -148,7 +148,7 @@ class AudioViewHelper extends AbstractTagBasedViewHelper
 			        return false;
 			    };
 			    document.getElementById("tx_srfreecap_captcha_audio_' . $fakeId . '_link").addEventListener("click", ' . $this->extensionName . 'AudioLinkOnClickFunction, false);';
-			$value .= '<script nonce="' . $nonce . '" >' . $audioOnClickScript .'</script>';
+			$value .= '<script' . (isset($nonce) ? ' nonce="' . $nonce . '"' : '') . '>' . $audioOnClickScript . '</script>';
 		}
 		return $value;
 	}

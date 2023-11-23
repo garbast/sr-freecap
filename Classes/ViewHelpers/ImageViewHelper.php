@@ -95,7 +95,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 		if ($nonceAttribute instanceof ConsumableString) {
 			$nonce = $nonceAttribute->consume();
 		}
-		$assetCollector->addJavaScript('sr-freecap', 'EXT:sr_freecap/Resources/Public/JavaScript/freeCap.js', ['nonce' => $nonce]);
+		$assetCollector->addJavaScript('sr-freecap', 'EXT:sr_freecap/Resources/Public/JavaScript/freeCap.js', isset($nonce) ? ['nonce' => $nonce] : []);
 
 		// Disable caching
 		$this->getTypoScriptFrontendController()->no_cache = true;
@@ -135,7 +135,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 	            return false;
 	        };
 			document.getElementById("tx_srfreecap_captcha_image_' . $fakeId . '_link").addEventListener("click", ' . $this->extensionName . 'ImageLinkOnClickFunction, false);';
-	    $value .= '<script nonce="' . $nonce . '" >' . $imageOnClickScript .'</script>';
+	    $value .= '<script' . (isset($nonce) ? ' nonce="' . $nonce . '"' : '') . '>' . $imageOnClickScript .'</script>';
 		return $value;
 	}
 
