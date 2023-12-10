@@ -29,8 +29,6 @@ namespace SJBR\SrFreecap\ViewHelpers;
 use Psr\Http\Message\ServerRequestInterface;
 use SJBR\SrFreecap\ViewHelpers\TranslateViewHelper;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Domain\ConsumableString;
-use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Session\Backend\Exception\SessionNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -89,14 +87,6 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 		}
 		$value = '';
 
-		// Include the required JavaScript
-		$assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
-		$nonceAttribute = $this->getRequest()->getAttribute('nonce');
-		if ($nonceAttribute instanceof ConsumableString) {
-			$nonce = $nonceAttribute->consume();
-		}
-		$assetCollector->addJavaScript('sr-freecap', 'EXT:sr_freecap/Resources/Public/JavaScript/freeCap.js', isset($nonce) ? ['nonce' => $nonce] : []);
-
 		// Disable caching
 		$this->getTypoScriptFrontendController()->no_cache = true;
 
@@ -125,17 +115,9 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 			. ' src="' . htmlspecialchars($imageUrl) . '"'
 			. ' alt="' . $translator->render('altText') . ' "/>'
 			. '<span' . $this->getClassAttribute('cant-read', $suffix) . '>' . $translator->render('cant_read1')
-			. ' <a id="tx_srfreecap_captcha_image_' . $fakeId . '_link" >'
+			. ' <a id="tx_srfreecap_captcha_image_' . $fakeId . '_link" data-srfreecap-image="' . $fakeId . '" >'
 			. $translator->render('click_here') . '</a>'
 			. $translator->render('cant_read2') . '</span>';
-		$imageOnClickScript = $this->extensionName . 'ImageLinkOnClickFunction = function(event) {
-	            event.preventDefault();
-	            document.getElementById("tx_srfreecap_captcha_image_' . $fakeId . '_link").blur();' . 
-	            $this->extensionName . '.newImage(\'' . $fakeId . '\', \'' . $translator->render('noImageMessage') .'\');
-	            return false;
-	        };
-			document.getElementById("tx_srfreecap_captcha_image_' . $fakeId . '_link").addEventListener("click", ' . $this->extensionName . 'ImageLinkOnClickFunction, false);';
-	    $value .= '<script' . (isset($nonce) ? ' nonce="' . $nonce . '"' : '') . '>' . $imageOnClickScript .'</script>';
 		return $value;
 	}
 
@@ -161,6 +143,6 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
 
 	private function getRequest(): ServerRequestInterface
 	{
-		return $GLOBALS['TYPO3_REQUEST'];
+		return isset($this->renderingContext) ? $this->renderingContext->getRequest() : $GLOBALS['TYPO3_REQUEST'];
 	}
 }

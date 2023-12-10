@@ -64,3 +64,5 @@ plugin.tx_srfreecap_pi2 {
 		.tx-srfreecap-pi1-cant-read a:link { background-color:transparent; font-weight:bold; text-decoration:none; }
 	)
 }
+## Include required js (this is required as the captcha might be included in the reponse of an ajax call)
+page.includeJSFooterlibs.sr-freecap = EXT:sr_freecap/Resources/Public/JavaScript/freeCap.js

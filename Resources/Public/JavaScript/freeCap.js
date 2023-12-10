@@ -38,15 +38,21 @@
 		 * @param string noImageMessage: message to be displayed if the image element cannot be found
 		 * @return void
 		 */
-		newImage: function (id, noImageMessage) {
-			if (document.getElementById) {
-					// extract image name from image source (i.e. cut off ?randomness)
-				var theImage = document.getElementById('tx_srfreecap_captcha_image_' + id);
-				var parts = theImage.src.split('&freecapSet');
-				theImage.src = parts[0] + '&freecapSet=' + Math.round(Math.random()*100000);
-			} else {
-				alert(noImageMessage ? noImageMessage : 'Sorry, we cannot autoreload a new image. Submit the form and a new image will be loaded.');
-			}
+		newImage: function (id) {
+			// extract image name from image source (i.e. cut off ?randomness)
+			var theImage = document.getElementById('tx_srfreecap_captcha_image_' + id);
+			var parts = theImage.src.split('&freecapSet');
+			theImage.src = parts[0] + '&freecapSet=' + Math.round(Math.random()*100000);
+		},
+
+		imageLinkOnClick: function(event) {
+			event.preventDefault();
+			var links = document.querySelectorAll('a[data-srfreecap-image]');
+			var link = links[0];
+			var fakeId = link.getAttribute('data-srfreecap-image');
+			link.blur();
+			SrFreecap.newImage(fakeId);
+			return false;
 		},
 		
 		/*
@@ -103,6 +109,30 @@
 			} else {
 				alert(noPlayMessage ? noPlayMessage : 'Sorry, we cannot play the word of the image.');
 			}
+		},
+
+        audioLinkOnClick: function(event) {
+	        event.preventDefault();
+	        var links = document.querySelectorAll('a[data-srfreecap-audio],input[data-srfreecap-audio]');
+	        var link = links[0];
+			var fakeId = link.getAttribute('data-srfreecap-audio');
+			link.blur();
+			var audioUrl = link.getAttribute('data-srfreecap-audio-url');
+			var noPlayMessage = link.getAttribute('data-srfreecap-audio-noplay');
+			SrFreecap.playCaptcha(fakeId, audioUrl, noPlayMessage);
+			return false;
 		}
-	}
+	};
+	document.addEventListener('DOMContentLoaded', (event) => {
+		document.body.addEventListener('click', function(event) {
+		    if (event.target.closest('a[data-srfreecap-image]')) {
+		        event.stopImmediatePropagation();
+		        SrFreecap.imageLinkOnClick(event);
+		    }
+		    if (event.target.closest('a[data-srfreecap-audio],input[data-srfreecap-audio]')) {
+		        event.stopImmediatePropagation();
+		        SrFreecap.audioLinkOnClick(event);
+		    }
+		});
+	});
 })();

@@ -29,8 +29,6 @@ namespace SJBR\SrFreecap\ViewHelpers;
 use Psr\Http\Message\ServerRequestInterface;
 use SJBR\SrFreecap\ViewHelpers\TranslateViewHelper;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Domain\ConsumableString;
-use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Session\Backend\Exception\SessionNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -103,12 +101,6 @@ class AudioViewHelper extends AbstractTagBasedViewHelper
 		$translator = GeneralUtility::makeInstance(TranslateViewHelper::class);
 		// Generate the icon
 		if (($settings['accessibleOutput'] ?? false) && ($GLOBALS['TYPO3_CONF_VARS']['SYS']['UTF8filesystem'] ?? false)) {
-			// Get the nonce
-			$assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
-			$nonceAttribute = $this->getRequest()->getAttribute('nonce');
-			if ($nonceAttribute instanceof ConsumableString) {
-				$nonce = $nonceAttribute->consume();
-			}
 			$pageUid = $this->getTypoScriptFrontendController()->id;
 			$site = GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($pageUid);
 			$languageAspect = $this->context->getAspect('language');
@@ -130,25 +122,23 @@ class AudioViewHelper extends AbstractTagBasedViewHelper
 				$value = '<input id="tx_srfreecap_captcha_audio_' . $fakeId . '_link" type="image" alt="' . $translator->render('click_here_accessible') . '"'
 					. ' title="' . $translator->render('click_here_accessible') . '"'
 					. ' src="' . $siteURL . PathUtility::stripPathSitePrefix(GeneralUtility::getFileAbsFileName($settings['accessibleOutputImage'])) . '"'
+					. ' data-srfreecap-audio="' . $fakeId . '"'
+					. ' data-srfreecap-audio-url="' . $audioURL . '"'
+					. ' data-srfreecap-audio-noplay="' . $translator->render('noPlayMessage') . '"'
 					. ' style="cursor: pointer;"'
 					. $this->getClassAttribute('image-accessible', $suffix) . ' />';
 			} else {
 				$value = '<span id="tx_srfreecap_captcha_playLink_' . $fakeId . '"'
 					. $this->getClassAttribute('accessible-link', $suffix) . '>' . $translator->render('click_here_accessible_before_link')
-					. '<a id="tx_srfreecap_captcha_audio_' . $fakeId . '_link" href="#" style="cursor: pointer;" title="' . $translator->render('click_here_accessible') . '">'
+					. '<a id="tx_srfreecap_captcha_audio_' . $fakeId . '_link"'
+					. ' data-srfreecap-audio="' . $fakeId . '"'
+					. ' data-srfreecap-audio-url="' . $audioURL . '"'
+					. ' data-srfreecap-audio-noplay="' .$translator->render('noPlayMessage') . '"'
+					. ' href="#" style="cursor: pointer;" title="' . $translator->render('click_here_accessible') . '">'
 					. $translator->render('click_here_accessible_link') . '</a>'
 					. $translator->render('click_here_accessible_after_link') . '</span>';
 			}
 			$value .= '<span' . $this->getClassAttribute('accessible', $suffix) . ' id="tx_srfreecap_captcha_playAudio_' . $fakeId . '"></span>';
-			$audioOnClickScript =
-			    $this->extensionName . 'AudioLinkOnClickFunction = function(event) {
-			        event.preventDefault();
-			        document.getElementById("tx_srfreecap_captcha_audio_' . $fakeId . '_link").blur();' . 
-			        $this->extensionName . '.playCaptcha(\'' . $fakeId . '\', \'' . $audioURL . '\', \'' . $translator->render('noPlayMessage') . '\');
-			        return false;
-			    };
-			    document.getElementById("tx_srfreecap_captcha_audio_' . $fakeId . '_link").addEventListener("click", ' . $this->extensionName . 'AudioLinkOnClickFunction, false);';
-			$value .= '<script' . (isset($nonce) ? ' nonce="' . $nonce . '"' : '') . '>' . $audioOnClickScript . '</script>';
 		}
 		return $value;
 	}
@@ -175,6 +165,6 @@ class AudioViewHelper extends AbstractTagBasedViewHelper
 
 	private function getRequest(): ServerRequestInterface
 	{
-		return $GLOBALS['TYPO3_REQUEST'];
+		return isset($this->renderingContext) ? $this->renderingContext->getRequest() : $GLOBALS['TYPO3_REQUEST'];
 	}
 }
