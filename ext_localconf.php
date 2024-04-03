@@ -13,6 +13,7 @@ call_user_func(
 		} else {
 			$GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'] = ['freecapSet'];
 		}
+		$GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'formatName';
 
 		// GDlib is a requirement for the Font Maker module
 		if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['gdlib'] ?? false) {
