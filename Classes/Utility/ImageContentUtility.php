@@ -4,7 +4,7 @@ namespace SJBR\SrFreecap\Utility;
 /*
  *  Copyright notice
  *
- *  (c) 2012-2023 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
+ *  (c) 2012-2024 Stanislas Rolland <typo3AAAA(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -108,7 +108,7 @@ class ImageContentUtility {
 		$word_start_y = $textPosition['vertical'];
 		// Get uniform color
 		if ($textColorType == self::TEXT_COLOR_UNIFORM) {
-			$textColor = RandomContentUtility::getRandomColor($colorMaximum['darkness'], $colorMaximum['lightness'], $backgroundType == self::BACKGROUND_TYPE_MORPHED_IMAGE_BLOCKS);
+			$textColor = RandomContentUtility::getRandomColor($colorMaximum['darkness'] ?? null, $colorMaximum['lightness'] ?? null, $backgroundType == self::BACKGROUND_TYPE_MORPHED_IMAGE_BLOCKS);
 			$textColor2 = ImageColorAllocate($image2, $textColor[0], $textColor[1], $textColor[2]);
 		}
 		// Write each character in different font
@@ -117,7 +117,7 @@ class ImageContentUtility {
 		for ($i = 0; $i < strlen($word); $i++) {
 			// Get changing color
 			if ($textColorType == self::TEXT_COLOR_ONE_PER_CHARACTER) {
-				$textColor = RandomContentUtility::getRandomColor($colorMaximum['darkness'], $colorMaximum['lightness'], $backgroundType == self::BACKGROUND_TYPE_MORPHED_IMAGE_BLOCKS);
+				$textColor = RandomContentUtility::getRandomColor($colorMaximum['darkness'] ?? null, $colorMaximum['lightness'] ?? null, $backgroundType == self::BACKGROUND_TYPE_MORPHED_IMAGE_BLOCKS);
 				$textColor2 = ImageColorAllocate($image2, $textColor[0], $textColor[1], $textColor[2]);
 			}
 			$fontIndex = RandomContentUtility::getRandomNumberInRange(0, sizeof($fontLocations)-1);

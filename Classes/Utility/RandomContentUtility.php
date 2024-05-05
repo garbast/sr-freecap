@@ -58,16 +58,16 @@ class RandomContentUtility
 	 * @param boolean $darker: if true, produce a possibly darker image by default
 	 * @return array the random color
 	 */
-	public static function getRandomColor ($colorMaximumDarkness, $colorMaximumLightness, $darker = false)
+	public static function getRandomColor($colorMaximumDarkness = null, $colorMaximumLightness = null, $darker = false)
 	{
 		$color = [];
 		if ($darker) {
 			// Needs darker colour..
-			$minimum = isset($colorMaximumDarkness) ? $colorMaximumDarkness : 10;
-			$maximum = isset($colorMaximumLightness) ? $colorMaximumLightness : 100;
+			$minimum = $colorMaximumDarkness ?? 10;
+			$maximum = $colorMaximumLightness ?? 100;
 		} else {
-			$minimum = isset($colorMaximumDarkness) ? $colorMaximumDarkness : 30;
-			$maximum = isset($colorMaximumLightness) ? $colorMaximumLightness : 140;
+			$minimum = $colorMaximumDarkness ?? 30;
+			$maximum = $colorMaximumLightness ?? 140;
 		}
 		for ($i = 0; $i < 3 ; $i++) {
 			$color[] = self::getRandomNumberInRange($minimum, $maximum);
